@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import 'answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(const MyApp());
 
@@ -21,9 +21,12 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
+    if (_questionIndex < _questions.length) {
+      print("Still more question");
+    }
   }
 
-  static const questions = [
+  final _questions = const [
     {
       'questionText': 'Who is the best programmer?',
       'answers': [
@@ -49,15 +52,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(title: const Text("Flutter stuff")),
-      body: Column(
-        children: [
-          Question((questions[_questionIndex]['questionText']) as String),
-          ...(questions[_questionIndex]['answers'] as List<String>)
-              .map((answer) =>
-                  Answer(selectHandler: _answerQuestion, answerText: answer))
-              .toList(),
-        ],
-      ),
+      body: _questionIndex < _questions.length
+          ? Quiz(
+              answerQuestion: _answerQuestion,
+              questions: _questions,
+              questionIndex: _questionIndex,
+            )
+          : const Result(),
     ));
   }
 }
